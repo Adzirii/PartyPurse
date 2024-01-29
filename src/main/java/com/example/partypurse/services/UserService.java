@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword().getValue())
+                .password(user.getPassword())
                 .build();
     }
 
