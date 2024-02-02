@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 //TODO: Добавить поля для банковской карты
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,7 @@ public class User {
     @Column(nullable = false)
     private String firstName;
 
+
     @Column(nullable = false)
     private String lastName;
 
@@ -34,8 +36,13 @@ public class User {
     @Column(nullable = false)
     private String passwordConfirm;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserData userData;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Room> createdRooms;

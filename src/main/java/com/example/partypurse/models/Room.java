@@ -19,11 +19,24 @@ public class Room {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL)
-    private RoomData roomData;
-
     @ManyToOne
     private User creator;
+
+    @Column(name = "invitation_link", unique = true, nullable = false)
+    private String invitationLink;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "created_at", nullable = false)
+    private Timestamp createdAt;
+
+    @Column(name = "room_category", nullable = false)
+    private ERoomCategory roomCategory;
+
+    @Column(name = "total_price")
+    private Double price;
+
 
     @ManyToMany
     @JoinTable(
