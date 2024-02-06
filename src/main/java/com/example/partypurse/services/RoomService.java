@@ -4,10 +4,8 @@ import com.example.partypurse.dto.request.RoomCreationForm;
 import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
 import com.example.partypurse.repositories.RoomRepository;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
