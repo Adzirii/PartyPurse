@@ -20,6 +20,7 @@ public class RoomController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createRoom(@RequestBody RoomCreationForm form, @AuthenticationPrincipal UserDetails userDetails){
-        return ResponseEntity.ok(roomService.save(form, userDetails));
+        roomService.save(form, userDetails);
+        return ResponseEntity.ok("Room Created");
     }
 }

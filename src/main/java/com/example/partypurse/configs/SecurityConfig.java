@@ -34,16 +34,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/room/**").hasAuthority("USER") // или с .authenticated()
-                        .requestMatchers("/api/v1/user/hi1").hasAuthority("USER") // или с .authenticated()
-                        .requestMatchers("/api/v1/user/hi2").hasAuthority("ADMIN") // или с .authenticated()
-                        .requestMatchers("/api/v1/user/hi3").hasRole("USER") // или с .authenticated()
-                        .requestMatchers("/api/v1/user/hi4").hasRole("ADMIN") // или с .authenticated()
-                        .requestMatchers("/api/v1/user/hi5").authenticated() // или с .authenticated()
-                        .requestMatchers("/api/v1/user/info").permitAll() // или с .authenticated()
+                        .requestMatchers("/api/v1/room/**").authenticated()
+                        .requestMatchers("/api/v1/user/delete/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/user/**").authenticated()
 //                        .requestMatchers("/api/v1/user/**").authenticated()
-                        //.requestMatchers("/api/v1/user/delete/").hasAuthority("ADMIN")
-                        //.anyRequest().permitAll())
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

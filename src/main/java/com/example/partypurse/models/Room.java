@@ -2,18 +2,23 @@ package com.example.partypurse.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "rooms")
+@RequiredArgsConstructor
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @SequenceGenerator( name = "room_seq", sequenceName = "room_sequence", allocationSize = 1, initialValue = 20 )
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -22,7 +27,7 @@ public class Room {
     @ManyToOne
     private User creator;
 
-    @Column(name = "invitation_link", unique = true, nullable = false)
+    @Column(name = "invitation_link", unique = true)
     private String invitationLink;
 
     @Column(name = "description")
@@ -53,4 +58,12 @@ public class Room {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
+
+    public Room(String name, ERoomCategory category) {
+        setName(name);
+        setRoomCategory(category);
+        setInvitationLink("O4ko");
+        setProducts(new ArrayList<>());
+        setUsers(new ArrayList<>());
+    }
 }
