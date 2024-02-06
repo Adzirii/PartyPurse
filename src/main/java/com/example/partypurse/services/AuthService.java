@@ -44,8 +44,8 @@ public class AuthService {
 
         Set<Role> roles = new HashSet<>();
         Role role = new Role();
-        role.setName(ERole.USER);
-        role.setId(0);
+        role.setName(signUpRequest.role());
+        role.setId(signUpRequest.role().ordinal());
         roles.add(role);
 
         User user = new User();

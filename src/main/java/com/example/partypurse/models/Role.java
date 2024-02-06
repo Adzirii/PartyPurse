@@ -3,11 +3,15 @@ package com.example.partypurse.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.awt.*;
 
 @Data
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -16,5 +20,4 @@ public class Role {
     @NaturalId
     @Column(length = 60)
     private ERole name;
-
 }
