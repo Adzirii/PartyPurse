@@ -31,12 +31,13 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/room/**").authenticated()
-                        .requestMatchers("/api/v1/user/delete/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/user/**").authenticated()
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/room/**").authenticated()
+                                .requestMatchers("/api/v1/user/delete/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/user/**").authenticated()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .anyRequest().authenticated()
 //                        .requestMatchers("/api/v1/user/**").authenticated()
-                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

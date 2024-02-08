@@ -1,5 +1,6 @@
 package com.example.partypurse.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class Room {
     private String name;
 
     @ManyToOne
+    @JsonBackReference
     private User creator;
 
     @Column(name = "invitation_link", unique = true)
@@ -62,7 +64,6 @@ public class Room {
     public Room(String name, ERoomCategory category) {
         setName(name);
         setRoomCategory(category);
-        setInvitationLink("O4ko");
         setProducts(new ArrayList<>());
         setUsers(new ArrayList<>());
     }

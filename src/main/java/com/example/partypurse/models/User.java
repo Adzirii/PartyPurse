@@ -1,5 +1,6 @@
 package com.example.partypurse.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.jsonwebtoken.security.Password;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -45,6 +46,7 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Room> createdRooms;
 
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

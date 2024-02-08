@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum JwtType {
     ACCESS(1000 * 60 * 30),     // 30 минут
-    REFRESH(1000 * 60 * 60 * 2); // 2 часа
+    REFRESH(1000 * 60 * 60 * 2), // 2 часа
+    ROOM(1000 * 60 * 60 * 168); // неделя
 
     private final int expireTime;
 

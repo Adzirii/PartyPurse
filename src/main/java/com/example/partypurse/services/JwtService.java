@@ -1,7 +1,9 @@
 package com.example.partypurse.services;
 
+import com.example.partypurse.dto.RoomClaims;
 import com.example.partypurse.dto.UserClaims;
 import com.example.partypurse.dto.JwtType;
+import com.example.partypurse.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j
@@ -42,6 +45,7 @@ public class JwtService {
                 .compact();
     }
 
+
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = exctractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -54,6 +58,7 @@ public class JwtService {
     public Date extractExpiration(String jwt){
         return extractClaim(jwt, Claims::getExpiration);
     }
+
 
     public Claims exctractAllClaims(final String jwt) {
         try {

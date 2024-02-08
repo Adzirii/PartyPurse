@@ -5,7 +5,6 @@ import com.example.partypurse.dto.request.SignInRequest;
 import com.example.partypurse.dto.request.SignUpRequest;
 import com.example.partypurse.dto.response.ApplicationError;
 import com.example.partypurse.dto.response.JwtResponse;
-import com.example.partypurse.models.ERole;
 import com.example.partypurse.models.Role;
 import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
@@ -34,7 +33,7 @@ public class AuthService {
     @Transactional
     public ResponseEntity<?> register(SignUpRequest signUpRequest) {
 
-        if (userService.findByUsername(signUpRequest.username()).isPresent())
+        if (userService.findByUsername(signUpRequest.username()) != null)
             return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким именем уже существет!"), HttpStatus.BAD_REQUEST);
 
         if (!signUpRequest.password().equals(signUpRequest.confirmPassword()))
@@ -60,9 +59,7 @@ public class AuthService {
     }
 
     public ResponseEntity<?> login(final SignInRequest signInRequest) {
-        User user = userService.findByUsername(signInRequest.username()).orElseThrow(()-> new IllegalArgumentException(
-                String.format("Пользователя с именем '%s' не существует", signInRequest.username()))
-        );
+        User user = userService.findByUsername(signInRequest.username());
         if (!encoder.matches(signInRequest.password(), user.getPassword()))
             return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "Неправильный пароль!"), HttpStatus.BAD_REQUEST);
 
