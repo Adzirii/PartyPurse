@@ -2,6 +2,7 @@ package com.example.partypurse.controllers;
 
 import com.example.partypurse.dto.response.UserDto;
 import com.example.partypurse.models.User;
+import com.example.partypurse.services.CustomUserDetails;
 import com.example.partypurse.services.RoomService;
 import com.example.partypurse.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,13 @@ public class UserController {
     private final RoomService roomService;
 
 
+    @GetMapping("/protected")
+    public String prot(){
+        return "Hi";
+    }
+
     @GetMapping("/info")
-    public ResponseEntity<UserDto> info(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> info(@AuthenticationPrincipal CustomUserDetails userDetails){
         User user = userService.findByUsername(userDetails.getUsername());
         return ResponseEntity.ok(userService.getInfo(user));
     }

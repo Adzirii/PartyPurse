@@ -26,18 +26,17 @@ public class UserService implements UserDetailsService {
         User user = findByUsername(username);
 
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), true, true, true,
-                true, getAuthorities(user.getRoles()));
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(), user.getPassword(), true, true, true,
+//                true, getAuthorities(user.getRoles()));
 
-        //return new CustomUserDetails(user, getAuthorities(user.getRoles()));
+        return new CustomUserDetails(user, getAuthorities(user.getRoles()));
     }
 
     public User findByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
                 String.format("Пользователя с именем '%s' не существует", username)
         ));
-
     }
     public Optional<User> findById(Long id){
         return userRepository.findById(id);
@@ -52,9 +51,12 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDto getInfo(User user){
-        Set<RoleDto> roles = user.getRoles().stream().map(role -> new RoleDto(role.getId(), role.getName())).collect(Collectors.toSet());
+        Set<RoleDto> roles = user.getRoles().stream().map(role -> {
 
-        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), roles,  );
+            return new RoleDto(role.getId(), role.getName(), role.getPrivileges());
+        }).collect(Collectors.toSet());
+
+        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), getAuthorities(user.getRoles()) );
     }
 
     public List<UserDto> getAllUsers(){
@@ -70,6 +72,7 @@ public class UserService implements UserDetailsService {
     public void deleteUser(Long id) {
         userRepository.findById(id).ifPresent(user -> userRepository.deleteById(id));
     }
+
 
     public Collection<? extends GrantedAuthority> getAuthorities(
             Collection<Role> roles) {
