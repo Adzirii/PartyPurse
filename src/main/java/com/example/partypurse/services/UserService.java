@@ -2,9 +2,13 @@ package com.example.partypurse.services;
 
 import com.example.partypurse.dto.response.RoleDto;
 import com.example.partypurse.dto.response.UserDto;
+import com.example.partypurse.models.Privilege;
+import com.example.partypurse.models.Role;
 import com.example.partypurse.models.User;
 import com.example.partypurse.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +24,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username);
-        return new CustomUserDetails(user, user.getRoles());
+
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), true, true, true,
+                true, getAuthorities(user.getRoles()));
+
+        //return new CustomUserDetails(user, getAuthorities(user.getRoles()));
     }
 
     public User findByUsername(String username){
@@ -43,7 +53,8 @@ public class UserService implements UserDetailsService {
 
     public UserDto getInfo(User user){
         Set<RoleDto> roles = user.getRoles().stream().map(role -> new RoleDto(role.getId(), role.getName())).collect(Collectors.toSet());
-        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), roles);
+
+        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), roles,  );
     }
 
     public List<UserDto> getAllUsers(){
@@ -60,5 +71,32 @@ public class UserService implements UserDetailsService {
         userRepository.findById(id).ifPresent(user -> userRepository.deleteById(id));
     }
 
+    public Collection<? extends GrantedAuthority> getAuthorities(
+            Collection<Role> roles) {
+
+        return getGrantedAuthorities(getPrivileges(roles));
+    }
+
+    private List<String> getPrivileges(Collection<Role> roles) {
+
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        for (Role role : roles) {
+            privileges.add(role.getName());
+            collection.addAll(role.getPrivileges());
+        }
+        for (Privilege item : collection) {
+            privileges.add(item.getName());
+        }
+        return privileges;
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
+        return authorities;
+    }
 
 }

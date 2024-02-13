@@ -19,7 +19,7 @@ public class AuthorizationController {
 
     @PostMapping("/singup")
     public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest){
-        return authService.register(signUpRequest);
+        return ResponseEntity.ok(authService.registerNewUser(signUpRequest));
     }
 
     @PostMapping("/singin")

@@ -1,9 +1,7 @@
 package com.example.partypurse.services;
 
-import com.example.partypurse.dto.RoomClaims;
 import com.example.partypurse.dto.UserClaims;
 import com.example.partypurse.dto.JwtType;
-import com.example.partypurse.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,12 +9,12 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j

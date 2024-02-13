@@ -8,17 +8,16 @@ import com.example.partypurse.dto.response.JwtResponse;
 import com.example.partypurse.models.Role;
 import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
+import com.example.partypurse.repositories.RoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.example.partypurse.dto.JwtType.ACCESS;
 import static com.example.partypurse.dto.JwtType.REFRESH;
@@ -29,31 +28,33 @@ public class AuthService {
     private final UserService userService;
     private final BCryptPasswordEncoder encoder;
     private final JwtService jwtService;
+    private final RoleRepository roleRepository;
 
     @Transactional
-    public ResponseEntity<?> register(SignUpRequest signUpRequest) {
+    public ResponseEntity<?> registerNewUser(SignUpRequest signUpRequest) {
 
-        if (userService.findByUsername(signUpRequest.username()) != null)
-            return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким именем уже существет!"), HttpStatus.BAD_REQUEST);
+        //TODO: если пользователь существует кидать ошибку.
+
+        try {
+            userService.findByUsername(signUpRequest.username());
+        } catch (UsernameNotFoundException e){
+            //return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким именем уже существет!"), HttpStatus.BAD_REQUEST);
+
+        }
 
         if (!signUpRequest.password().equals(signUpRequest.confirmPassword()))
             return new ResponseEntity<>(new ApplicationError(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают!"), HttpStatus.BAD_REQUEST);
 
-        List<Room> rooms = new ArrayList<>();
 
-        Set<Role> roles = new HashSet<>();
-        Role role = new Role();
-        role.setName(signUpRequest.role());
-        role.setId(signUpRequest.role().ordinal());
-        roles.add(role);
 
         User user = new User();
-        user.setCreatedRooms(rooms);
         user.setFirstName(signUpRequest.firstName());
         user.setLastName(signUpRequest.lastName());
         user.setUsername(signUpRequest.username());
-        user.setRoles(roles);
+        user.setVisitedRooms(new ArrayList<>());
+        user.setCreatedRooms(new ArrayList<>());
         user.setPassword(encoder.encode(signUpRequest.password()));
+        user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
 
         return ResponseEntity.ok(userService.save(user));
     }

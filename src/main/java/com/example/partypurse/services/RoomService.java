@@ -34,7 +34,7 @@ public class RoomService {
         return roomRepository.findByInvitationLink(link).orElseThrow(() -> new IllegalArgumentException("Комнаты с такой ссылкой не существует"));
     }
 
-    public String join(String inviteLink, CustomUserDetails userDetails){
+    public String join(String inviteLink, UserDetails userDetails){
         User user = userService.findByUsername(userDetails.getUsername());
         Room room = findByLink(inviteLink);
 
@@ -44,7 +44,7 @@ public class RoomService {
         return "Вы успешно вошли";
     }
 
-    public String getInviteLink(Long id, CustomUserDetails userDetails){
+    public String getInviteLink(Long id, UserDetails userDetails){
         User user = userService.findByUsername(userDetails.getUsername());
         Room room = findRoomById(id);
 
@@ -61,7 +61,9 @@ public class RoomService {
                 room.getCreatedAt(), room.getRoomCategory(), users, products);
     }
 
-    public List<RoomDto> getAllUserRooms(CustomUserDetails userDetails){
+    //TODO: Сделать roomUpdate
+
+    public List<RoomDto> getAllUserRooms(UserDetails userDetails){
         User user = userService.findByUsername(userDetails.getUsername());
 
         return user.getCreatedRooms().stream().map(room -> getInfo(room.getInvitationLink())).toList();

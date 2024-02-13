@@ -23,22 +23,27 @@ public class SecurityConfig {
     }
 
 
-    // Добавил роли, но ничего не изменилось
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        //http.authorizeHttpRequests(req -> req.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll());
+
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                                 .requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/room/**").authenticated()
-                                .requestMatchers("/api/v1/user/delete/**").hasAuthority("ADMIN")
-                                .requestMatchers("/api/v1/user/**").authenticated()
-                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/info").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/authority").hasAuthority("READ_PRIVILEGE")
                                 .anyRequest().authenticated()
+//                        .requestMatchers("/api/v1/room/**").authenticated()
+//                        .requestMatchers("/api/v1/user/delete/**").hasAuthority("ADMIN")
 //                        .requestMatchers("/api/v1/user/**").authenticated()
+//                        .anyRequest().permitAll()
                 )
+
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

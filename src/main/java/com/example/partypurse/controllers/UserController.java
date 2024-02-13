@@ -1,10 +1,7 @@
 package com.example.partypurse.controllers;
 
 import com.example.partypurse.dto.response.UserDto;
-import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
-import com.example.partypurse.repositories.UserRepository;
-import com.example.partypurse.services.CustomUserDetails;
 import com.example.partypurse.services.RoomService;
 import com.example.partypurse.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -30,15 +25,20 @@ public class UserController {
 
 
     @GetMapping("/info")
-    public ResponseEntity<UserDto> info(@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<UserDto> info(@AuthenticationPrincipal UserDetails userDetails){
         User user = userService.findByUsername(userDetails.getUsername());
         return ResponseEntity.ok(userService.getInfo(user));
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<String> delete(@AuthenticationPrincipal UserDetails userDetails){
         User user = userService.findByUsername(userDetails.getUsername());
         userService.delete(user);
         return ResponseEntity.ok("Пользователь удален");
+    }
+
+    @GetMapping("/role")
+    public ResponseEntity<?> getRoles(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.ok(userDetails.getAuthorities());
     }
 
     @DeleteMapping("/delete/{id}")
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/roomsInfo")
-    public ResponseEntity<?> userRooms(@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> userRooms(@AuthenticationPrincipal UserDetails userDetails){
         return ResponseEntity.ok(roomService.getAllUserRooms(userDetails));
     }
 

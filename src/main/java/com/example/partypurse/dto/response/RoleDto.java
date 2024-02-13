@@ -7,5 +7,5 @@ import java.io.Serializable;
 /**
  * DTO for {@link com.example.partypurse.models.Role}
  */
-public record RoleDto(Integer id, ERole name) implements Serializable {
+public record RoleDto(Long id, String name) implements Serializable {
 }
