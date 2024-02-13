@@ -42,16 +42,10 @@ public class UserController {
         return ResponseEntity.ok("Пользователь удален");
     }
 
-    @GetMapping("/role")
-    public ResponseEntity<?> getRoles(@AuthenticationPrincipal UserDetails userDetails){
-        return ResponseEntity.ok(userDetails.getAuthorities());
-    }
-
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("ADMIN")
     public ResponseEntity<String> deleteByAdmin(@PathVariable Long id){
         userService.deleteUser(id);
-        return ResponseEntity.ok("Пользователь удален");
+        return ResponseEntity.ok("Пользователь удален - admin");
     }
 
     @GetMapping("/roomsInfo")

@@ -16,6 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtFilter;
+    private static final String[] AUTH_WHITELIST = {
+            "/api/v1/auth/**",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/api-docs/**"
+    };
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -34,15 +40,12 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                                .requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/user/protected").hasRole("ADMIN")
-                                .requestMatchers("/info").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/authority").hasAuthority("READ_PRIVILEGE")
-                                .anyRequest().authenticated()
-//                        .requestMatchers("/api/v1/room/**").authenticated()
-//                        .requestMatchers("/api/v1/user/delete/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/api/v1/user/**").authenticated()
-//                        .anyRequest().permitAll()
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
+//                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/user/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/room/**").authenticated()
+                        .requestMatchers("/api/v1/user/**").authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

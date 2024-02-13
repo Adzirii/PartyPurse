@@ -55,8 +55,8 @@ public class AuthService {
         user.setCreatedRooms(new ArrayList<>());
         user.setPassword(encoder.encode(signUpRequest.password()));
         user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
-
-        return ResponseEntity.ok(userService.save(user));
+        userService.save(user);
+        return ResponseEntity.ok((userService.getInfo(user)));
     }
 
     public ResponseEntity<?> login(final SignInRequest signInRequest) {
