@@ -1,5 +1,6 @@
 package com.example.partypurse.controllers;
 
+import com.example.partypurse.dto.request.UserUpdateRequest;
 import com.example.partypurse.dto.response.UserDto;
 import com.example.partypurse.models.User;
 import com.example.partypurse.services.CustomUserDetails;
@@ -35,11 +36,20 @@ public class UserController {
         return ResponseEntity.ok("Пользователь удален");
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> deleteByAdmin(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("Пользователь удален - admin");
     }
+
+
+    @PostMapping("/update")
+    public ResponseEntity<String> deleteByAdmin(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                @RequestBody UserUpdateRequest updateForm) {
+
+        return ResponseEntity.ok("пользователь обновлен: " + userService.update(updateForm, userDetails));
+    }
+
 
 
     @GetMapping("/allUsers")

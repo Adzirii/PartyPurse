@@ -1,5 +1,6 @@
 package com.example.partypurse.services;
 
+import com.example.partypurse.dto.request.UserUpdateRequest;
 import com.example.partypurse.dto.response.RoleDto;
 import com.example.partypurse.dto.response.UserDto;
 import com.example.partypurse.models.Privilege;
@@ -102,4 +103,11 @@ public class UserService implements UserDetailsService {
         return authorities;
     }
 
+    public UserDto update(UserUpdateRequest updateRequest, CustomUserDetails userDetails) {
+        User user = findByUsername(userDetails.getUsername());
+        user.setUsername(updateRequest.username());
+        user.setFirstName(updateRequest.firstName());
+        user.setLastName(updateRequest.lastName());
+        return getInfo(user);
+    }
 }

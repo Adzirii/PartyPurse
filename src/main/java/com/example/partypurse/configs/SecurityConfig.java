@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers("/api/v1/user/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/user/{id}/delete").hasRole("ADMIN")
                         .requestMatchers("/api/v1/room/**").authenticated()
                         .requestMatchers("/api/v1/user/**").authenticated()
                         .anyRequest().authenticated()
