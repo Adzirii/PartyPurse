@@ -16,6 +16,9 @@ public class Role {
     private Long id;
 
     private String name;
+
+
+    @Transient
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 

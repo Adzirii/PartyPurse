@@ -38,8 +38,8 @@ public class UserService implements UserDetailsService {
                 String.format("Пользователя с именем '%s' не существует", username)
         ));
     }
-    public Optional<User> findById(Long id){
-        return userRepository.findById(id);
+    public User findById(Long id){
+        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Пользователя с таким id не существует"));
     }
 
     public List<User> findAllUsers(){

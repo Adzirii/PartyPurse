@@ -8,9 +8,7 @@ import com.example.partypurse.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,37 +22,28 @@ public class UserController {
     private final UserService userService;
     private final RoomService roomService;
 
-
-    @GetMapping("/protected")
-    public String prot(){
-        return "Hi";
-    }
-
     @GetMapping("/info")
-    public ResponseEntity<?> info(@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> info(@AuthenticationPrincipal CustomUserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         return ResponseEntity.ok(userService.getInfo(user));
     }
+
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<String> delete(@AuthenticationPrincipal CustomUserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         userService.delete(user);
         return ResponseEntity.ok("Пользователь удален");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteByAdmin(@PathVariable Long id){
+    public ResponseEntity<String> deleteByAdmin(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("Пользователь удален - admin");
     }
 
-    @GetMapping("/roomsInfo")
-    public ResponseEntity<?> userRooms(@AuthenticationPrincipal UserDetails userDetails){
-        return ResponseEntity.ok(roomService.getAllUserRooms(userDetails));
-    }
 
     @GetMapping("/allUsers")
-    public ResponseEntity<List<UserDto>> getAllUsers(){
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 }
