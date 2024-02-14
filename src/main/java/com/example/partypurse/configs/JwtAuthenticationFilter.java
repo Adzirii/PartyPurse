@@ -1,5 +1,6 @@
 package com.example.partypurse.configs;
 
+import com.example.partypurse.services.InMemoryTokenBlacklist;
 import com.example.partypurse.services.JwtService;
 import com.example.partypurse.services.UserService;
 import jakarta.servlet.FilterChain;
@@ -30,17 +31,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserService userService;
+    private final InMemoryTokenBlacklist tokenBlacklist;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader(AUTHORIZATION);
 
-        if (Objects.isNull(authHeader) || !authHeader.startsWith(BEARER_PREFIX)){
-            filterChain.doFilter(request,response);
+
+        // Token is valid and not blacklisted
+        // Proceed with request processing
+
+        if (Objects.isNull(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
+            filterChain.doFilter(request, response);
             return;
         }
-
         String jwt = authHeader.substring(7);
+        if (jwt != null && !tokenBlacklist.isBlacklisted(jwt)) {
+
         String subject = jwtService.extractUsername(jwt);
 
         Authentication authentication = getAuthentication(subject);
@@ -48,9 +55,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+        else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+}
 
-    private Authentication getAuthentication(final String subject){
-        UserDetails userDetails = userService.loadUserByUsername(subject);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-    }
+private Authentication getAuthentication(final String subject) {
+    UserDetails userDetails = userService.loadUserByUsername(subject);
+    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+}
 }
