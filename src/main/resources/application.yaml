@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/PartyPurseDB
+    url:  jdbc:postgresql://host.docker.internal:5432/PartyPurseDB
     username: postgres
     password: 123456
 
