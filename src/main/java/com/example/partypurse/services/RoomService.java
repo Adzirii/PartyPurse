@@ -32,12 +32,12 @@ public class RoomService {
         return roomRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Такой комнаты не существует"));
     }
 
-    public Room findByLink(String link){
+    public Room findByLink(String link) {
         return roomRepository.findByInvitationLink(link).orElseThrow(() -> new IllegalArgumentException("Комнаты с такой ссылкой не существует"));
     }
 
-    //TODO: Протестировать
-    public String join(String inviteLink, UserDetails userDetails){
+
+    public String join(String inviteLink, UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         Room room = findByLink(inviteLink);
         if (room.getUsers().contains(user))
@@ -49,7 +49,7 @@ public class RoomService {
         return "Вы успешно вошли";
     }
 
-    public String leave(Long id, UserDetails userDetails){
+    public String leave(Long id, UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         Room room = findRoomById(id);
         if (!room.getUsers().contains(user))
@@ -59,13 +59,6 @@ public class RoomService {
         roomRepository.save(room);
         userRepository.save(user);
         return "Вы успешно вышли из комнаты";
-    }
-
-    public String getInviteLink(Long id, UserDetails userDetails){
-        Room room = findRoomById(id);
-        if (checkRoomCreator(room, userDetails))
-            return "Только создатель комнаты может получить ссылку-приглашение";
-        return room.getInvitationLink();
     }
 
 
@@ -81,7 +74,14 @@ public class RoomService {
         return "Пользователь исключен";
     }
 
-    public RoomDto getInfo(String link){
+    public String getInviteLink(Long id, UserDetails userDetails) {
+        Room room = findRoomById(id);
+        if (checkRoomCreator(room, userDetails))
+            return "Только создатель комнаты может получить ссылку-приглашение";
+        return room.getInvitationLink();
+    }
+
+    public RoomDto getInfo(String link) {
         Room room = findByLink(link);
         List<UserDto> users = room.getUsers().stream().map(userService::getInfo).toList();
         List<ProductDto> products = room.getProducts().stream().map(productService::getInfo).toList();
@@ -91,12 +91,12 @@ public class RoomService {
 
     //TODO: Сделать roomUpdate
 
-    public List<RoomDto> getAllUserRooms(UserDetails userDetails){
+    public List<RoomDto> getAllUserRooms(UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         return user.getCreatedRooms().stream().map(room -> getInfo(room.getInvitationLink())).toList();
     }
 
-    private boolean checkRoomCreator(Room room, UserDetails userDetails){
+    private boolean checkRoomCreator(Room room, UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
         return !room.getCreator().getId().equals(user.getId());
     }
@@ -196,17 +196,22 @@ public class RoomService {
         return room.getInvitationLink();
     }
 
-    public String update(Long id, RoomUpdateForm form, UserDetails userDetails){
+    public String update(Long id, RoomUpdateForm form, UserDetails userDetails) {
         Room room = findRoomById(id);
         if (checkRoomCreator(room, userDetails))
             return "У вас нет прав для изменения комнаты";
-        room.setName(form.name());
-        room.setDescription(form.description());
-        room.setRoomCategory(form.category());
+        if (form.name() != null)
+            room.setName(form.name());
+
+        if (form.description() != null)
+            room.setDescription(form.description());
+
+        if (form.category() != null)
+            room.setRoomCategory(form.category());
         return "Комната изменена";
     }
 
-    public String delete(Long id, UserDetails userDetails){
+    public String delete(Long id, UserDetails userDetails) {
         Room room = findRoomById(id);
         if (checkRoomCreator(room, userDetails))
             return "У вас нет прав для удаления комнаты";

@@ -38,15 +38,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(AUTHORIZATION);
 
 
-        // Token is valid and not blacklisted
-        // Proceed with request processing
-
         if (Objects.isNull(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
         String jwt = authHeader.substring(7);
-        if (jwt != null && !tokenBlacklist.isBlacklisted(jwt)) {
+        if (!tokenBlacklist.isBlacklisted(jwt)) {
 
         String subject = jwtService.extractUsername(jwt);
 

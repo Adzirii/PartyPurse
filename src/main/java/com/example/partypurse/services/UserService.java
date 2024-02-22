@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username);
@@ -34,42 +35,44 @@ public class UserService implements UserDetailsService {
         return new CustomUserDetails(user, getAuthorities(user.getRoles()));
     }
 
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
                 String.format("Пользователя с именем '%s' не существует", username)
         ));
     }
-    public User findById(Long id){
+
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Пользователя с таким id не существует"));
     }
 
-    public List<User> findAllUsers(){
+    public List<User> findAllUsers() {
         return new ArrayList<>(userRepository.findAll());
     }
 
-    public User save(User user){
+    public User save(User user) {
         return userRepository.save(user);
     }
 
-    public UserDto getInfo(User user){
+    public UserDto getInfo(User user) {
         Set<RoleDto> roles = user.getRoles().stream().map(role -> {
 
             return new RoleDto(role.getId(), role.getName(), role.getPrivileges());
         }).collect(Collectors.toSet());
 
-        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), getAuthorities(user.getRoles()) );
+        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), getAuthorities(user.getRoles()));
     }
 
-    public List<UserDto> getAllUsers(){
+    public List<UserDto> getAllUsers() {
 
         List<User> allUsers = findAllUsers();
 
         return allUsers.stream().map(this::getInfo).collect(Collectors.toList());
     }
 
-    public void delete(User user){
+    public void delete(User user) {
         userRepository.delete(user);
     }
+
     public void deleteUser(Long id) {
         userRepository.findById(id).ifPresent(user -> userRepository.deleteById(id));
     }
@@ -104,10 +107,17 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDto update(UserUpdateRequest updateRequest, CustomUserDetails userDetails) {
+
         User user = findByUsername(userDetails.getUsername());
-        user.setUsername(updateRequest.username());
-        user.setFirstName(updateRequest.firstName());
-        user.setLastName(updateRequest.lastName());
+
+
+        if (updateRequest.getUsername() != null)
+            user.setUsername(updateRequest.getUsername());
+        if (updateRequest.getFirstName() != null)
+            user.setFirstName(updateRequest.getFirstName());
+        if (updateRequest.getLastName() != null)
+            user.setLastName(updateRequest.getLastName());
+        userRepository.save(user);
         return getInfo(user);
     }
 }

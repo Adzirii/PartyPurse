@@ -21,6 +21,7 @@ public class RoomController {
         return ResponseEntity.ok("Room link = " + roomService.save(form, userDetails));
     }
 
+
     @PostMapping("/{id}/update")
     public ResponseEntity<String> updateRoom(@PathVariable Long id, @RequestBody RoomUpdateForm form, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
@@ -39,7 +40,8 @@ public class RoomController {
     }
 
     @GetMapping("/{id}/{type}") //TODO: в будущем возможен отказ, от этого.
-    public ResponseEntity<?> roomAction(@PathVariable Long id, @PathVariable String type, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> roomAction(@PathVariable Long id, @PathVariable String type,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
         return switch (type) {
             case "info" -> roomService.getSingleRoomInfo(id, userDetails);
             case "participants" -> roomService.getAllRoomParticipants(id, userDetails);

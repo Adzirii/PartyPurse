@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final RoomService roomService;
 
     @GetMapping("/info")
     public ResponseEntity<?> info(@AuthenticationPrincipal CustomUserDetails userDetails) {

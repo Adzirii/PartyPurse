@@ -1,4 +1,14 @@
 package com.example.partypurse.dto.request;
 
-public record UserUpdateRequest(String username, String firstName, String lastName) {
+import lombok.*;
+
+@Setter
+@Getter
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class UserUpdateRequest {
+    String username;
+    String firstName;
+    String lastName;
+
 }
