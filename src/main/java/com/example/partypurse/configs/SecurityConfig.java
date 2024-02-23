@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/**").authenticated()
                         .anyRequest().authenticated()
                 )
-
+                .logout(logout -> logout.logoutUrl("/api/v1/auth/singin"))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
