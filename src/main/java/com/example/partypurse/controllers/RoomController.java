@@ -51,26 +51,6 @@ public class RoomController {
         };
     }
 
-
-    //    @GetMapping("/{id}/info")
-//    public ResponseEntity<?> roomInfo(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-//        return roomService.getSingleRoomInfo(id, userDetails);
-//    }
-//
-//    @GetMapping("/{id}/participants")
-//    public ResponseEntity<?> roomParticipants(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-//        return roomService.getAllRoomParticipants(id, userDetails);
-//    }
-//
-//    @GetMapping("/{id}/products")
-//    public ResponseEntity<?> roomProducts(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-//        return roomService.getAllRoomProducts(id, userDetails);
-//    }
-//
-//    @GetMapping("/{id}/totalPrice")
-//    public ResponseEntity<?> roomTotalPrice(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-//        return roomService.getTotalPrice(id, userDetails);
-//    }
     @GetMapping("join/{link}")
     public ResponseEntity<String> joinRoom(@PathVariable String link, @AuthenticationPrincipal CustomUserDetails userDetails) {
 

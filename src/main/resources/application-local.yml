@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url:  jdbc:postgresql://localhost:5433/partypurse_db
-    username: user
-    password: pass
+    url:  jdbc:postgresql://localhost:5432/PartyPurseDB
+    username: postgres
+    password: 123456
 
   jpa:
     generate-ddl: true

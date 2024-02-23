@@ -34,6 +34,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
+                //.logout(logout -> logout.logoutUrl("/api/v1/auth/singin"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(AUTH_WHITELIST).permitAll()
@@ -42,7 +43,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .logout(logout -> logout.logoutUrl("/api/v1/auth/singin"))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
