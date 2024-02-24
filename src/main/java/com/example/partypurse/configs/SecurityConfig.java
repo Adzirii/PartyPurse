@@ -34,7 +34,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                //.logout(logout -> logout.logoutUrl("/api/v1/auth/singin"))
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/api/v1/auth/home")
+                        .logoutUrl("/api/v1/auth/logout"))
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(AUTH_WHITELIST).permitAll()

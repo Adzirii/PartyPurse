@@ -6,12 +6,12 @@ import com.example.partypurse.services.AuthService;
 import com.example.partypurse.services.InMemoryTokenBlacklist;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -31,7 +31,7 @@ public class AuthorizationController {
         return authService.login(loginRequest);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         String token = extractTokenFromRequest(request);
         tokenBlacklist.addToBlacklist(token);
@@ -42,16 +42,17 @@ public class AuthorizationController {
     }
 
     public String extractTokenFromRequest(HttpServletRequest request) {
-        // Get the Authorization header from the request
         String authorizationHeader = request.getHeader("Authorization");
 
-        // Check if the Authorization header is not null and starts with "Bearer "
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
-            // Extract the JWT token (remove "Bearer " prefix)
             return authorizationHeader.substring(7);
         }
-
-        // If the Authorization header is not valid, return null
         return null;
+    }
+
+    @GetMapping("/home")
+    public ResponseEntity<String> home() {
+        log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ВЫШЛИ!!!!!!!!!!!!!!!!!!!!!!!!");
+        return ResponseEntity.ok("Вы вышли");
     }
 }
