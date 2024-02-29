@@ -1,6 +1,5 @@
 package com.example.partypurse.configs;
 
-import com.example.partypurse.services.InMemoryTokenBlacklist;
 import com.example.partypurse.services.JwtService;
 import com.example.partypurse.services.UserService;
 import jakarta.servlet.FilterChain;
@@ -9,8 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
-import org.hibernate.annotations.Comment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserService userService;
-    private final InMemoryTokenBlacklist tokenBlacklist;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         String jwt = authHeader.substring(7);
-        if (!tokenBlacklist.isBlacklisted(jwt)) {
+        if (!jwtService.isBlacklisted(jwt)) {
 
         String subject = jwtService.extractUsername(jwt);
 

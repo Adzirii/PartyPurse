@@ -3,7 +3,7 @@ package com.example.partypurse.controllers;
 import com.example.partypurse.dto.request.SignInRequest;
 import com.example.partypurse.dto.request.SignUpRequest;
 import com.example.partypurse.services.AuthService;
-import com.example.partypurse.services.InMemoryTokenBlacklist;
+import com.example.partypurse.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,25 +19,23 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationController {
 
     private final AuthService authService;
-    private final InMemoryTokenBlacklist tokenBlacklist;
+    private final JwtService jwtService;
 
-    @PostMapping("/singup")
+    @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest){
         return ResponseEntity.ok(authService.registerNewUser(signUpRequest));
     }
 
-    @PostMapping("/singin")
+    @PostMapping("/signin")
     public ResponseEntity<?> login(@RequestBody SignInRequest loginRequest){
         return authService.login(loginRequest);
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
-        String token = extractTokenFromRequest(request);
-        tokenBlacklist.addToBlacklist(token);
-
-        // Clear any session-related data if necessary
-
+//        String token = extractTokenFromRequest(request);
+//        jwtService.addToBlacklist(token);
+//        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return ResponseEntity.ok("Logged out successfully");
     }
 

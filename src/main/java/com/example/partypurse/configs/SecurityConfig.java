@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtFilter;
+    private final CustomLogoutHandler logoutHandler;
+    private final CustomSuccessHandler successHandler;
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
             "/swagger-resources/**",
@@ -35,9 +37,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(logoutHandler)
                         .logoutSuccessUrl("/api/v1/auth/home")
-                        .logoutUrl("/api/v1/auth/logout"))
-
+                        .logoutSuccessHandler(successHandler)
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(AUTH_WHITELIST).permitAll()

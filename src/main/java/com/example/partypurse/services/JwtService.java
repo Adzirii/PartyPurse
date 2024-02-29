@@ -2,12 +2,15 @@ package com.example.partypurse.services;
 
 import com.example.partypurse.dto.UserClaims;
 import com.example.partypurse.dto.JwtType;
+import com.example.partypurse.models.JwtBlackList;
+import com.example.partypurse.repositories.JwtRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,9 @@ import java.util.function.Function;
 
 @Slf4j
 @Service
-public class JwtService {
+@RequiredArgsConstructor
+public class JwtService implements TokenBlacklist{
+    private final JwtRepository jwtRepository;
     private static final String SECRET_KEY = "dGhpcyBzZWNyZXQga2V5IGlzIGVuY29kZWQgdGV4dCBieSBiYXNlNjQgYWxnb3JpdGht";
     private SecretKey secretKey;
 
@@ -71,6 +76,21 @@ public class JwtService {
             log.info("[JwtService] Exception");
         }
         throw new IllegalArgumentException("Invalid Token");
+    }
+
+    @Override
+    public void addToBlacklist(String token) {
+
+        var blackList = new JwtBlackList();
+        blackList.setToken(token);
+        blackList.setUsername(extractUsername(token));
+        blackList.setExpirationDate(extractExpiration(token));
+        jwtRepository.save(blackList);
+    }
+
+    @Override
+    public boolean isBlacklisted(String token) {
+        return jwtRepository.findByToken(token).isPresent();
     }
 
 }
