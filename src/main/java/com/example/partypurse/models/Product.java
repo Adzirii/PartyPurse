@@ -1,8 +1,7 @@
 package com.example.partypurse.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -18,8 +17,11 @@ public class Product {
     private String productName;
 
     @Column(name = "category", nullable = false)
-    private EProductCategory category;
+    private String category;
 
     @Column(name = "price", nullable = false)
     private Double price;
+
+    @ManyToOne
+    private User adder;
 }

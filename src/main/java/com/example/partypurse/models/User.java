@@ -46,6 +46,9 @@ public class User {
     )
     private Collection<Role> roles;
 
+    @OneToMany(mappedBy = "adder", cascade = CascadeType.ALL)
+    private List<Product> addedProducts;
+
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Room> createdRooms;

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationController {
 
     private final AuthService authService;
-    private final JwtService jwtService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest){
@@ -33,19 +32,7 @@ public class AuthorizationController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
-//        String token = extractTokenFromRequest(request);
-//        jwtService.addToBlacklist(token);
-//        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return ResponseEntity.ok("Logged out successfully");
-    }
-
-    public String extractTokenFromRequest(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
     }
 
     @GetMapping("/home")

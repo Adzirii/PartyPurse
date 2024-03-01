@@ -53,6 +53,7 @@ public class AuthService {
         user.setUsername(signUpRequest.username());
         user.setVisitedRooms(new ArrayList<>());
         user.setCreatedRooms(new ArrayList<>());
+        user.setAddedProducts(new ArrayList<>());
         user.setPassword(encoder.encode(signUpRequest.password()));
         user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
         userService.save(user);

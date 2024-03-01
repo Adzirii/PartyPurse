@@ -52,6 +52,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setRoles(Collections.singletonList(adminRole));
         user.setVisitedRooms(new ArrayList<>());
         user.setCreatedRooms(new ArrayList<>());
+        user.setAddedProducts(new ArrayList<>());
         userRepository.save(user);
 
         alreadySetup = true;

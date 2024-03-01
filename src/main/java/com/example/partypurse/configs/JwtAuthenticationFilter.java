@@ -41,20 +41,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = authHeader.substring(7);
         if (!jwtService.isBlacklisted(jwt)) {
 
-        String subject = jwtService.extractUsername(jwt);
+            String subject = jwtService.extractUsername(jwt);
 
-        Authentication authentication = getAuthentication(subject);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            Authentication authentication = getAuthentication(subject);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        filterChain.doFilter(request, response);
-    }
-        else {
+            filterChain.doFilter(request, response);
+        } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-}
+    }
 
-private Authentication getAuthentication(final String subject) {
-    UserDetails userDetails = userService.loadUserByUsername(subject);
-    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-}
+    private Authentication getAuthentication(final String subject) {
+        UserDetails userDetails = userService.loadUserByUsername(subject);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
 }
