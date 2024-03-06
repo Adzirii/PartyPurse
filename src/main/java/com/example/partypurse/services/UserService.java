@@ -5,6 +5,7 @@ import com.example.partypurse.dto.response.RoleDto;
 import com.example.partypurse.dto.response.UserDto;
 import com.example.partypurse.models.Privilege;
 import com.example.partypurse.models.Role;
+import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
 import com.example.partypurse.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,6 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username);
-
-
-//        return new org.springframework.security.core.userdetails.User(
-//                user.getUsername(), user.getPassword(), true, true, true,
-//                true, getAuthorities(user.getRoles()));
 
         return new CustomUserDetails(user, getAuthorities(user.getRoles()));
     }
@@ -119,5 +115,11 @@ public class UserService implements UserDetailsService {
             user.setLastName(updateRequest.getLastName());
         userRepository.save(user);
         return getInfo(user);
+    }
+
+    public List<Room> getAllRooms(CustomUserDetails userDetails) {
+        User user = findByUsername(userDetails.getUsername());
+        return user.getCreatedRooms();
+//        return user.getCreatedRooms().stream().map(room -> roomService.getInfo(room.getInvitationLink())).toList();
     }
 }

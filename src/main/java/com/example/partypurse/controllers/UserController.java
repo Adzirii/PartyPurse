@@ -2,6 +2,7 @@ package com.example.partypurse.controllers;
 
 import com.example.partypurse.dto.request.UserUpdateRequest;
 import com.example.partypurse.dto.response.UserDto;
+import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
 import com.example.partypurse.services.CustomUserDetails;
 import com.example.partypurse.services.RoomService;
@@ -49,10 +50,13 @@ public class UserController {
         return ResponseEntity.ok("пользователь обновлен: " + userService.update(updateForm, userDetails));
     }
 
-
-
     @GetMapping("/allUsers")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/rooms")
+    public ResponseEntity<List<Room>> userRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(userService.getAllRooms(userDetails));
     }
 }

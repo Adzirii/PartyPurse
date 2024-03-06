@@ -8,6 +8,8 @@ import com.example.partypurse.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -26,6 +28,10 @@ public class ProductService {
 
     public Product getById(Long id){
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Продукта с таким id не найдено"));
+    }
+
+    public List<Product> getAll(){
+        return productRepository.findAll();
     }
 
     public void delete(Long id) {

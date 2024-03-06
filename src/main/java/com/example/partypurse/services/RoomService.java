@@ -13,7 +13,6 @@ import com.example.partypurse.repositories.RoomRepository;
 import com.example.partypurse.repositories.UserRepository;
 import com.example.partypurse.util.errors.UserAuthorityException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -115,8 +114,15 @@ public class RoomService {
         checkRoomCreator(room, userDetails);
         return room.getInvitationLink();
     }
+    public RoomDto getInfoById(Long id) {
+        Room room = findRoomById(id);
+        List<UserDto> users = room.getUsers().stream().map(userService::getInfo).toList();
+        List<ProductDto> products = room.getProducts().stream().map(productService::getInfo).toList();
+        return new RoomDto(room.getId(), room.getName(), userService.getInfo(room.getCreator()), room.getInvitationLink(), room.getDescription(),
+                room.getCreatedAt(), room.getRoomCategory(), users, products);
+    }
 
-    public RoomDto getInfo(String link) {
+    public RoomDto getInfoByLink(String link) {
         Room room = findByLink(link);
         List<UserDto> users = room.getUsers().stream().map(userService::getInfo).toList();
         List<ProductDto> products = room.getProducts().stream().map(productService::getInfo).toList();
@@ -126,7 +132,7 @@ public class RoomService {
 
     public List<RoomDto> getAllUserRooms(UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
-        return user.getCreatedRooms().stream().map(room -> getInfo(room.getInvitationLink())).toList();
+        return user.getCreatedRooms().stream().map(room -> getInfoByLink(room.getInvitationLink())).toList();
     }
 
     private void checkRoomCreator(Room room, UserDetails userDetails) throws UserAuthorityException {
@@ -138,7 +144,7 @@ public class RoomService {
 
     public ResponseEntity<?> getSingleRoomInfo(Long id, UserDetails userDetails) {
         Room room = findRoomById(id);
-        return processRoomRequest(room, userDetails, () -> ResponseEntity.ok(getInfo(room.getInvitationLink())));
+        return processRoomRequest(room, userDetails, () -> ResponseEntity.ok(getInfoByLink(room.getInvitationLink())));
     }
 
     public ResponseEntity<?> getAllRoomParticipants(Long id, UserDetails userDetails) {
@@ -155,12 +161,12 @@ public class RoomService {
 
     public ResponseEntity<?> getTotalPrice(Long id, UserDetails userDetails) {
         Room room = findRoomById(id);
-        return processRoomRequest(room, userDetails, () -> ResponseEntity.ok(room.getPrice()));
+        return processRoomRequest(room, userDetails, () -> ResponseEntity.ok(getAllProductsCost(id)));
     }
 
     private ResponseEntity<?> processRoomRequest(Room room, UserDetails userDetails,
                                                  Supplier<ResponseEntity<?>> successResponseSupplier) {
-        checkRoomCreator(room, userDetails);
+        //checkRoomCreator(room, userDetails);
         return successResponseSupplier.get();
     }
 

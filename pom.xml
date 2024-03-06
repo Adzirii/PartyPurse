@@ -34,14 +34,6 @@
 		</dependency>
 
 
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-docker-compose &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-docker-compose</artifactId>-->
-<!--			<version>3.1.1</version>-->
-<!--		</dependency>-->
-
-
 
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -94,6 +86,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.6.0.Beta1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

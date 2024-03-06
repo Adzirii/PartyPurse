@@ -4,6 +4,7 @@ import com.example.partypurse.dto.request.ProductCreationForm;
 import com.example.partypurse.dto.request.RoomCreationForm;
 import com.example.partypurse.dto.request.RoomUpdateForm;
 import com.example.partypurse.dto.response.ProductDto;
+import com.example.partypurse.dto.response.RoomDto;
 import com.example.partypurse.services.CustomUserDetails;
 import com.example.partypurse.services.ProductService;
 import com.example.partypurse.services.RoomService;
@@ -20,10 +21,17 @@ public class RoomController {
     private final RoomService roomService;
     private final ProductService productService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomDto> getInfoById(@PathVariable Long id){
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body( roomService.getInfoById(id));
+    }
 
 
 
-    @PostMapping("/{id}/products/create")
+    @PostMapping("/{id}/products")
     public ResponseEntity<String> saveProduct(@RequestBody ProductCreationForm form, @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roomService.addProduct(id, form, userDetails);
         return ResponseEntity.ok()
@@ -31,7 +39,7 @@ public class RoomController {
                 .body("Продукт сохранен.");
     }
 
-    @DeleteMapping("/{roomId}/products/{prodId}/delete")
+    @DeleteMapping("/{roomId}/products/{prodId}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long roomId, @PathVariable Long prodId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roomService.deleteProduct(roomId,prodId, userDetails);
         return ResponseEntity.ok()
@@ -49,6 +57,8 @@ public class RoomController {
                 .body(info);
     }
 
+
+    // ДОСТУПНО ДЛЯ ВСЕХ
     @GetMapping("/{roomId}/cost")
     public ResponseEntity<Double> getTotalPrice(@PathVariable Long roomId){
         var cost = roomService.getAllProductsCost(roomId);
@@ -77,12 +87,14 @@ public class RoomController {
         return ResponseEntity.ok(roomService.delete(id, userDetails));
     }
 
-    @GetMapping("/roomsInfo")
-    public ResponseEntity<?> userRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(roomService.getAllUserRooms(userDetails));
-    }
+//    @GetMapping("/getAllUsers")
+//    public ResponseEntity<?> userRooms(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        return ResponseEntity.ok(roomService.getAllUserRooms(userDetails));
+//    }
 
-    @GetMapping("/{id}/{type}") //TODO: в будущем возможен отказ, от этого.
+
+    // ИНФОРМАЦИЯ ДОСТУПАНЯ ДЛЯ ВСЕХ. userDetails можно удалить.
+    @GetMapping("/{id}/{type}")
     public ResponseEntity<?> roomAction(@PathVariable Long id, @PathVariable String type,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         return switch (type) {
@@ -111,6 +123,7 @@ public class RoomController {
         return ResponseEntity.ok(roomService.kickUser(roomId, userId, userDetails));
     }
 
+    //ДОСТУПНО ТОЛЬКО СОЗДЕТЛЮ КОМНАТЫ
     @GetMapping("/getLink/{id}")
     public ResponseEntity<?> getInviteLink(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(roomService.getInviteLink(id, userDetails));
