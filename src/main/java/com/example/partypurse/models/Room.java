@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Room {
     @Id
-//    @SequenceGenerator( name = "room_seq", sequenceName = "room_sequence", allocationSize = 1, initialValue = 20 )
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
@@ -61,10 +60,5 @@ public class Room {
     )
     private List<Product> products;
 
-    public Room(String name, ERoomCategory category) {
-        setName(name);
-        setRoomCategory(category);
-        setProducts(new ArrayList<>());
-        setUsers(new ArrayList<>());
-    }
+
 }

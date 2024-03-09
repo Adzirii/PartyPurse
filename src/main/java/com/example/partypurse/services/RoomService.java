@@ -5,7 +5,7 @@ import com.example.partypurse.dto.request.RoomCreationForm;
 import com.example.partypurse.dto.request.RoomUpdateForm;
 import com.example.partypurse.dto.response.ProductDto;
 import com.example.partypurse.dto.response.RoomDto;
-import com.example.partypurse.dto.response.UserDto;
+import com.example.partypurse.dto.response.UserInfoDto;
 import com.example.partypurse.models.Product;
 import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
@@ -116,7 +116,7 @@ public class RoomService {
     }
     public RoomDto getInfoById(Long id) {
         Room room = findRoomById(id);
-        List<UserDto> users = room.getUsers().stream().map(userService::getInfo).toList();
+        List<UserInfoDto> users = room.getUsers().stream().map(userService::getInfo).toList();
         List<ProductDto> products = room.getProducts().stream().map(productService::getInfo).toList();
         return new RoomDto(room.getId(), room.getName(), userService.getInfo(room.getCreator()), room.getInvitationLink(), room.getDescription(),
                 room.getCreatedAt(), room.getRoomCategory(), users, products);
@@ -124,7 +124,7 @@ public class RoomService {
 
     public RoomDto getInfoByLink(String link) {
         Room room = findByLink(link);
-        List<UserDto> users = room.getUsers().stream().map(userService::getInfo).toList();
+        List<UserInfoDto> users = room.getUsers().stream().map(userService::getInfo).toList();
         List<ProductDto> products = room.getProducts().stream().map(productService::getInfo).toList();
         return new RoomDto(room.getId(), room.getName(), userService.getInfo(room.getCreator()), room.getInvitationLink(), room.getDescription(),
                 room.getCreatedAt(), room.getRoomCategory(), users, products);
@@ -149,7 +149,7 @@ public class RoomService {
 
     public ResponseEntity<?> getAllRoomParticipants(Long id, UserDetails userDetails) {
         Room room = findRoomById(id);
-        List<UserDto> users = room.getUsers().stream().map(userService::getInfo).toList();
+        List<UserInfoDto> users = room.getUsers().stream().map(userService::getInfo).toList();
         return processRoomRequest(room, userDetails, () -> ResponseEntity.ok(users));
     }
 
@@ -173,7 +173,7 @@ public class RoomService {
     public String save(RoomCreationForm form, UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
 
-        Room room = new Room(form.name(), form.category());
+        Room room = new Room();
         room.setName(form.name());
         room.setRoomCategory(form.category());
         room.setInvitationLink(linkService.createInvitationLink());

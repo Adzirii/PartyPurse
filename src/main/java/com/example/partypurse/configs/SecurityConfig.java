@@ -25,11 +25,6 @@ public class SecurityConfig {
             "/api-docs/**"
     };
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,11 +39,14 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers("/api/v1/user/{id}/delete").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/room/**").authenticated()
-                        .requestMatchers("/api/v1/user/**").authenticated()
-                        .anyRequest().authenticated()
+                                .requestMatchers(AUTH_WHITELIST).permitAll()
+                                .requestMatchers("/api/v1/user/{id}/delete").hasAuthority("DELETE_PRIVILEGE")
+                                .requestMatchers("/api/v1/user/allUsers").hasAuthority("READ_PRIVILEGE")
+                                .requestMatchers("/api/v1/room/**").authenticated()
+                                .requestMatchers("/api/v1/user/**").authenticated()
+//                        .requestMatchers("/api/v1/user/{id}/delete").hasRole("ADMIN")
+
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
