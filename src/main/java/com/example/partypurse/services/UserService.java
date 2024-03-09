@@ -52,8 +52,8 @@ public class UserService implements UserDetailsService {
     public User save(SignUpRequest signUpRequest) throws PasswordComplexityException, PasswordNotEqualsException {
 
 
-        passwordService.validate(signUpRequest.password(),
-                signUpRequest.confirmPassword());
+//        passwordService.validate(signUpRequest.password(),
+//                signUpRequest.confirmPassword());
 
         User user = new User();
         user.setFirstName(signUpRequest.firstName());
@@ -134,13 +134,12 @@ public class UserService implements UserDetailsService {
     public List<Room> getAllRooms(CustomUserDetails userDetails) {
         User user = findByUsername(userDetails.getUsername());
         return user.getCreatedRooms();
-//        return user.getCreatedRooms().stream().map(room -> roomService.getInfo(room.getInvitationLink())).toList();
     }
 
     public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
         var user = findByUsername(userDetails.getUsername());
         passwordService.verify(form.oldPassword(), userDetails.getPassword());
-        passwordService.validate(form.oldPassword(),form.newPassword(), form.newPasswordConfirm());
+//        passwordService.validate(form.oldPassword(),form.newPassword(), form.newPasswordConfirm());
         user.setPassword(passwordService.encode(form.newPassword()));
         userRepository.save(user);
     }
