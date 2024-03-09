@@ -1,4 +1,4 @@
-package com.example.partypurse.dto.response;
+package com.example.partypurse.util.errors;
 
 import lombok.Data;
 
