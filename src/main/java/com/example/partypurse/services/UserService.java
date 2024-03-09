@@ -1,13 +1,17 @@
 package com.example.partypurse.services;
 
-import com.example.partypurse.dto.request.UserUpdateRequest;
-import com.example.partypurse.dto.response.RoleDto;
-import com.example.partypurse.dto.response.UserDto;
+import com.example.partypurse.dto.request.PasswordUpdateForm;
+import com.example.partypurse.dto.request.SignUpRequest;
+import com.example.partypurse.dto.request.UserUpdateDto;
+import com.example.partypurse.dto.response.UserInfoDto;
 import com.example.partypurse.models.Privilege;
 import com.example.partypurse.models.Role;
 import com.example.partypurse.models.Room;
 import com.example.partypurse.models.User;
+import com.example.partypurse.repositories.RoleRepository;
 import com.example.partypurse.repositories.UserRepository;
+import com.example.partypurse.util.errors.PasswordComplexityException;
+import com.example.partypurse.util.errors.PasswordNotEqualsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +26,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+
     private final UserRepository userRepository;
+    private final PasswordService passwordService;
+    private final RoleRepository roleRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -41,31 +49,37 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("Пользователя с таким id не существует"));
     }
 
-    public List<User> findAllUsers() {
-        return new ArrayList<>(userRepository.findAll());
+    public User save(SignUpRequest signUpRequest) throws PasswordComplexityException, PasswordNotEqualsException {
+
+
+        passwordService.validate(signUpRequest.password(),
+                signUpRequest.confirmPassword());
+
+        User user = new User();
+        user.setFirstName(signUpRequest.firstName());
+        user.setLastName(signUpRequest.lastName());
+        user.setUsername(signUpRequest.username());
+        user.setVisitedRooms(new ArrayList<>());
+        user.setCreatedRooms(new ArrayList<>());
+        user.setAddedProducts(new ArrayList<>());
+        user.setPassword(passwordService.encode(signUpRequest.password()));
+        user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
+        return userRepository.save(user);
     }
 
-    public void save(User user) {
-        userRepository.save(user);
+    public UserInfoDto getInfo(User user) {
+        return new UserInfoDto(user.getId(), user.getUsername(), user.getFirstName(),
+                user.getLastName(), getAuthorities(user.getRoles()));
     }
 
-    public UserDto getInfo(User user) {
-        Set<RoleDto> roles = user.getRoles().stream().map(role -> {
+    public List<UserInfoDto> getAllUsers() {
 
-            return new RoleDto(role.getId(), role.getName(), role.getPrivileges());
-        }).collect(Collectors.toSet());
-
-        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), getAuthorities(user.getRoles()));
-    }
-
-    public List<UserDto> getAllUsers() {
-
-        List<User> allUsers = findAllUsers();
-
+        List<User> allUsers = userRepository.findAll();
         return allUsers.stream().map(this::getInfo).collect(Collectors.toList());
     }
 
-    public void delete(User user) {
+    public void delete(CustomUserDetails userDetails) {
+        User user = findByUsername(userDetails.getUsername());
         userRepository.delete(user);
     }
 
@@ -102,7 +116,7 @@ public class UserService implements UserDetailsService {
         return authorities;
     }
 
-    public UserDto update(UserUpdateRequest updateRequest, CustomUserDetails userDetails) {
+    public UserInfoDto update(UserUpdateDto updateRequest, CustomUserDetails userDetails) {
 
         User user = findByUsername(userDetails.getUsername());
 
@@ -121,5 +135,13 @@ public class UserService implements UserDetailsService {
         User user = findByUsername(userDetails.getUsername());
         return user.getCreatedRooms();
 //        return user.getCreatedRooms().stream().map(room -> roomService.getInfo(room.getInvitationLink())).toList();
+    }
+
+    public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
+        var user = findByUsername(userDetails.getUsername());
+        passwordService.verify(form.oldPassword(), userDetails.getPassword());
+        passwordService.validate(form.oldPassword(),form.newPassword(), form.newPasswordConfirm());
+        user.setPassword(passwordService.encode(form.newPassword()));
+        userRepository.save(user);
     }
 }

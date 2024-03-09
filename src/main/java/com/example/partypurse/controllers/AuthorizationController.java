@@ -2,13 +2,14 @@ package com.example.partypurse.controllers;
 
 import com.example.partypurse.dto.request.SignInRequest;
 import com.example.partypurse.dto.request.SignUpRequest;
+import com.example.partypurse.dto.response.JwtResponse;
+import com.example.partypurse.dto.response.UserInfoDto;
 import com.example.partypurse.services.AuthService;
-import com.example.partypurse.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -21,13 +22,17 @@ public class AuthorizationController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest){
-        return ResponseEntity.ok(authService.registerNewUser(signUpRequest));
+    public ResponseEntity<UserInfoDto> register(@RequestBody SignUpRequest signUpRequest){
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(authService.registerNewUser(signUpRequest));
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> login(@RequestBody SignInRequest loginRequest){
-        return authService.login(loginRequest);
+    public ResponseEntity<JwtResponse> login(@RequestBody SignInRequest loginRequest){
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(authService.login(loginRequest));
     }
 
     @PostMapping("/logout")
