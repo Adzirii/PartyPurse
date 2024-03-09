@@ -9,7 +9,7 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
 springdoc:
   swagger-ui:
@@ -22,3 +22,6 @@ springdoc:
 logging:
   level:
     org.springframework.security: trace
+
+
+regexp: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&+=_-]).{8,}$
