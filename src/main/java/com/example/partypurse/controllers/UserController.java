@@ -54,7 +54,7 @@ public class UserController {
 
 
     // TODO: Починить обновление jwt после обновления информации о пользователе
-    @PutMapping()
+    @PatchMapping()
     public ResponseEntity<UserInfoDto> update(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                 @RequestBody @Valid UserUpdateDto updateForm) {
         return ResponseEntity.ok()
@@ -62,7 +62,7 @@ public class UserController {
                 .body(userService.update(updateForm, userDetails));
     }
 
-    @PutMapping("/passwordUpdate")
+    @PatchMapping("/passwordUpdate")
     public void passwordUpdate(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                  @RequestBody PasswordUpdateForm passwordUpdateForm,
                                                  HttpServletRequest request,

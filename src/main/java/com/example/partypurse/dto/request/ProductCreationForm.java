@@ -1,6 +1,18 @@
 package com.example.partypurse.dto.request;
 
-import com.example.partypurse.models.User;
 
-public record ProductCreationForm(String name, String category, Double price) {
+import jakarta.validation.constraints.*;
+
+public record ProductCreationForm(
+        @NotBlank
+        @Size(max = 30)
+        String name,
+        @NotBlank
+        @Size(max = 30)
+        String category,
+
+        @NotNull
+        @DecimalMin("0")
+        @DecimalMax("999999")
+        Double price) {
 }
