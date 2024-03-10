@@ -6,11 +6,12 @@ import com.example.partypurse.util.errors.SamePasswordEqualsWhenUpdateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class PasswordService {
+public class PasswordUtil {
     @Value("${regexp}")
     private String regex;
     private final BCryptPasswordEncoder encoder;

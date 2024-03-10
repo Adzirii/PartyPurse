@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PasswordService passwordService;
+    private final PasswordUtil passwordUtil;
     private final RoleRepository roleRepository;
 
 
@@ -62,8 +62,12 @@ public class UserService implements UserDetailsService {
         user.setVisitedRooms(new ArrayList<>());
         user.setCreatedRooms(new ArrayList<>());
         user.setAddedProducts(new ArrayList<>());
-        user.setPassword(passwordService.encode(signUpRequest.password()));
+        user.setPassword(passwordUtil.encode(signUpRequest.password()));
         user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
+        return userRepository.save(user);
+    }
+
+    public User save(User user){
         return userRepository.save(user);
     }
 
@@ -138,9 +142,9 @@ public class UserService implements UserDetailsService {
 
     public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
         var user = findByUsername(userDetails.getUsername());
-        passwordService.verify(form.oldPassword(), userDetails.getPassword());
+        passwordUtil.verify(form.oldPassword(), userDetails.getPassword());
 //        passwordService.validate(form.oldPassword(),form.newPassword(), form.newPasswordConfirm());
-        user.setPassword(passwordService.encode(form.newPassword()));
+        user.setPassword(passwordUtil.encode(form.newPassword()));
         userRepository.save(user);
     }
 }

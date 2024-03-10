@@ -17,7 +17,7 @@ import static com.example.partypurse.dto.JwtType.REFRESH;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
-    private final PasswordService passwordService;
+    private final PasswordUtil passwordUtil;
     private final JwtService jwtService;
 
 
@@ -40,7 +40,7 @@ public class AuthService {
     public JwtResponse login(final SignInRequest signInRequest){
         User user = userService.findByUsername(signInRequest.username());
 
-        passwordService.verify(signInRequest.password(), user.getPassword());
+        passwordUtil.verify(signInRequest.password(), user.getPassword());
 
         UserClaims userClaims = new UserClaims(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
 
