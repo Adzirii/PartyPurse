@@ -1,8 +1,6 @@
 package com.example.partypurse.util.exception;
 
-import com.example.partypurse.util.errors.PasswordComplexityException;
-import com.example.partypurse.util.errors.PasswordNotEqualsException;
-import com.example.partypurse.util.errors.SamePasswordEqualsWhenUpdateException;
+import com.example.partypurse.util.errors.*;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +84,22 @@ public class ControllerExceptionHandler {
                 .badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("Новый пароль должен отличаться от старого");
+    }
+
+    @ExceptionHandler(RoomAccessException.class)
+    public ResponseEntity<String> handlePasswordComplexity(RoomAccessException ex) {
+        return ResponseEntity
+                .badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("У вас нет прав на изменение данной комнаты");
+    }
+
+    @ExceptionHandler(ProductModifyException.class)
+    public ResponseEntity<String> handlePasswordComplexity(ProductModifyException ex) {
+        return ResponseEntity
+                .badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("У вас нет прав на изменение данного продукта");
     }
 
 
