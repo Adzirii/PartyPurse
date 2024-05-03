@@ -39,8 +39,6 @@ public class RoomController {
 
     @GetMapping("/{roomId}")
     public ResponseEntity<RoomInfoDto> getInfoById(@PathVariable Long roomId, HttpServletResponse response) throws IOException {
-        if (roomId == 228)
-            response.sendRedirect("https://rt.pornhub.com/");
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(roomService.getInfoById(roomId));
