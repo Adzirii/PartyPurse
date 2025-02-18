@@ -142,11 +142,15 @@ public class UserService implements UserDetailsService {
 
     public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
 //        User user = findByUsername(userDetails.getUsername());
+<<<<<<< HEAD
 //        return user.getCreatedRooms();git p
     }
     public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
 //        User user = findByUsername(userDetails.getUsername());
 //        return user.getCreatedRooms();git p
+=======
+//        return user.getCreatedRooms();
+>>>>>>> a3274cc (new mehtod)
     }
     public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
         var user = findByUsername(userDetails.getUsername());
