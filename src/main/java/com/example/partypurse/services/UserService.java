@@ -141,11 +141,12 @@ public class UserService implements UserDetailsService {
     }
 
     public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
-//        var user = findByUsername(userDetails.getUsername());
-//        passwordUtil.verify(form.oldPassword(), userDetails.getPassword());
-////        passwordService.validate(form.oldPassword(),form.newPassword(), form.newPasswordConfirm());
-//        user.setPassword(passwordUtil.encode(form.newPassword()));
-//        userRepository.save(user);
+//        User user = findByUsername(userDetails.getUsername());
+//        return user.getCreatedRooms();git p
+    }
+    public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
+//        User user = findByUsername(userDetails.getUsername());
+//        return user.getCreatedRooms();git p
     }
     public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
         var user = findByUsername(userDetails.getUsername());
@@ -156,4 +157,4 @@ public class UserService implements UserDetailsService {
     }
 }
 
- /// jopa
+ /// jopfhd 
