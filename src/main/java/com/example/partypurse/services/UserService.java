@@ -143,6 +143,7 @@ public class UserService implements UserDetailsService {
     public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
 //        User user = findByUsername(userDetails.getUsername());
 <<<<<<< HEAD
+<<<<<<< HEAD
 //        return user.getCreatedRooms();git p
     }
     public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
@@ -151,6 +152,9 @@ public class UserService implements UserDetailsService {
 =======
 //        return user.getCreatedRooms();
 >>>>>>> a3274cc (new mehtod)
+=======
+//        return user.getCreatedRooms();git p
+>>>>>>> 7492c09 (asdf)
     }
     public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
         var user = findByUsername(userDetails.getUsername());
