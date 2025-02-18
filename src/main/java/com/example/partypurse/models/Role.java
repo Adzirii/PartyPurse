@@ -6,6 +6,8 @@ import lombok.Data;
 import java.util.Collection;
 import java.util.Set;
 
+//Add a new comment
+
 @Data
 @Entity
 @Table(name = "roles")
