@@ -34,6 +34,21 @@ public class JwtService implements TokenBlacklist{
         secretKey = Keys.hmacShaKeyFor(bytes);
     }
 
+
+
+    public String generatenNewToken(UserClaims userClaims, JwtType jwtType) {
+        long now = System.currentTimeMillis();
+        return Jwts.builder()
+            .claim("name", userClaims.username())
+            .claim("firstName", userClaims.firstName())
+            .claim("lastName", userClaims.lastName())
+            .claim("id", userClaims.id())
+            .subject(userClaims.username())
+            .issuedAt(new Date(now))
+            .expiration(new Date(now + jwtType.getExpireTime()))
+            .signWith(secretKey)
+            .compact();
+    }
     public String generateToken(UserClaims userClaims, JwtType jwtType) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
