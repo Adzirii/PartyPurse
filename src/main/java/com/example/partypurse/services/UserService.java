@@ -140,6 +140,13 @@ public class UserService implements UserDetailsService {
         return user.getCreatedRooms();
     }
 
+    public void passwordUpdate2(UserDetails userDetails, PasswordUpdateForm form) {
+//        var user = findByUsername(userDetails.getUsername());
+//        passwordUtil.verify(form.oldPassword(), userDetails.getPassword());
+////        passwordService.validate(form.oldPassword(),form.newPassword(), form.newPasswordConfirm());
+//        user.setPassword(passwordUtil.encode(form.newPassword()));
+//        userRepository.save(user);
+    }
     public void passwordUpdate(UserDetails userDetails, PasswordUpdateForm form) {
         var user = findByUsername(userDetails.getUsername());
         passwordUtil.verify(form.oldPassword(), userDetails.getPassword());
