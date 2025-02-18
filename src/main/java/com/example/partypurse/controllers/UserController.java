@@ -36,6 +36,7 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userService.getInfo(user));
     }
+// this is a comment
 
     @DeleteMapping()
     public ResponseEntity<String> delete(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) throws IOException {
