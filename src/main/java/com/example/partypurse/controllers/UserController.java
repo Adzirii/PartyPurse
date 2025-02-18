@@ -38,12 +38,7 @@ public class UserController {
     }
 // this is a comment
 
-    @DeleteMapping()
-    public ResponseEntity<String> delete(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) throws IOException {
-        userService.delete(userDetails);
-        log.info("пользователь удален");
-        return ResponseEntity.ok("Пользователь удален");
-    }
+    
 
     //Only user with DELETE_PRIVILEGE can do it
     @DeleteMapping("/{id}/delete")
