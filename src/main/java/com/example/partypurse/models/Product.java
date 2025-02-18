@@ -24,4 +24,6 @@ public class Product {
 
     @ManyToOne
     private User adder;
+
+    //Hello como estas
 }
