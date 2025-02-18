@@ -37,7 +37,7 @@ public class JwtService implements TokenBlacklist{
     public String generateToken(UserClaims userClaims, JwtType jwtType) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
-                .claim("username", userClaims.username())
+                .claim("name", userClaims.username())
                 .claim("firstName", userClaims.firstName())
                 .claim("lastName", userClaims.lastName())
                 .claim("id", userClaims.id())
